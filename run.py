@@ -9,7 +9,7 @@ import os
 import PIL
 import PIL.Image
 import sys
-
+import cv2
 ##########################################################
 
 assert(int(str('').join(torch.__version__.split('.')[0:3])) >= 41) # requires at least pytorch version 0.4.1
@@ -22,7 +22,7 @@ torch.backends.cudnn.enabled = True # make sure to use cudnn for computational p
 
 arguments_strModel = 'bsds500'
 arguments_strIn = './images/sample.png'
-arguments_strOut = './out.png'
+arguments_strOut = './Lightstraps.png'
 
 for strOption, strArgument in getopt.getopt(sys.argv[1:], '', [ strParameter[2:] + '=' for strParameter in sys.argv[1::2] ])[0]:
 	if strOption == '--model' and strArgument != '': arguments_strModel = strArgument # which model to use
@@ -132,8 +132,8 @@ def estimate(tensorInput):
 	intWidth = tensorInput.size(2)
 	intHeight = tensorInput.size(1)
 
-	assert(intWidth == 480) # remember that there is no guarantee for correctness, comment this line out if you acknowledge this and want to continue
-	assert(intHeight == 320) # remember that there is no guarantee for correctness, comment this line out if you acknowledge this and want to continue
+	# assert(intWidth == 480) # remember that there is no guarantee for correctness, comment this line out if you acknowledge this and want to continue
+	# assert(intHeight == 320) # remember that there is no guarantee for correctness, comment this line out if you acknowledge this and want to continue
 
 	return moduleNetwork(tensorInput.cuda().view(1, 3, intHeight, intWidth))[0, :, :, :].cpu()
 # end
@@ -141,9 +141,10 @@ def estimate(tensorInput):
 ##########################################################
 
 if __name__ == '__main__':
-	tensorInput = torch.FloatTensor(numpy.array(PIL.Image.open(arguments_strIn))[:, :, ::-1].transpose(2, 0, 1).astype(numpy.float32) * (1.0 / 255.0))
+	a = cv2.imread('/home/pc/Documents/pytorch-hed-master/images/NovellisRollsPics/IMG_20190612_112006.jpg')
+	a = cv2.resize(a, (0, 0), fx=0.4, fy=0.4)
 
+	tensorInput = torch.FloatTensor(a.transpose(2, 0, 1).astype(numpy.float32) * (1.0 / 255.0))
 	tensorOutput = estimate(tensorInput)
 
-	PIL.Image.fromarray((tensorOutput.clamp(0.0, 1.0).numpy().transpose(1, 2, 0)[:, :, 0] * 255.0).astype(numpy.uint8)).save(arguments_strOut)
-# end
+	PIL.Image.fromarray((tensorOutput.clamp(0.0, 1.0).numpy().transpose(1, 2, 0)[:, :, 0] * 255.0).astype(numpy.uint8)).save(arguments_strOut)# end
