@@ -141,10 +141,11 @@ def estimate(tensorInput):
 ##########################################################
 
 if __name__ == '__main__':
-	a = cv2.imread('/home/pc/Documents/pytorch-hed-master/images/NovellisRollsPics/IMG_20190612_112006.jpg')
+	a = cv2.imread('/home/pc/Documents/pytorch-hed/images/12.jpg')
 	a = cv2.resize(a, (0, 0), fx=0.4, fy=0.4)
 
 	tensorInput = torch.FloatTensor(a.transpose(2, 0, 1).astype(numpy.float32) * (1.0 / 255.0))
 	tensorOutput = estimate(tensorInput)
-
-	PIL.Image.fromarray((tensorOutput.clamp(0.0, 1.0).numpy().transpose(1, 2, 0)[:, :, 0] * 255.0).astype(numpy.uint8)).save(arguments_strOut)# end
+	cv2.imshow("output", (tensorOutput.clamp(0.0, 1.0).numpy().transpose(1, 2, 0)[:, :, 0] * 255.0).astype(numpy.uint8))
+	cv2.waitKey(0)
+	cv2.destroyAllWindows()
