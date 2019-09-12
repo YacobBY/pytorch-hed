@@ -150,7 +150,7 @@ def estimate(tensorInput):
 ##########################################################
 
 if __name__ == '__main__':
-    inputImagePath = '/home/pc/Documents/pytorch-hed/images/PhoneCamPics2/17Cropped.jpg'
+    inputImagePath = '/home/pc/Documents/pytorch-hed/images/CameraRollsBuiten/28.jpg'
 
 
     a = cv2.imread(inputImagePath)
@@ -160,6 +160,8 @@ if __name__ == '__main__':
     tensorOutput = estimate(tensorInput)
     imgFilteredRaw = (tensorOutput.clamp(0.0, 1.0).numpy().transpose(1, 2, 0)[:, :, 0] * 255.0).astype(numpy.uint8)
     processedImage =   filteredImage = cv2.bilateralFilter(imgFilteredRaw, 30, 25, 255)
+
+    
 
     
 
