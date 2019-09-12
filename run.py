@@ -10,7 +10,7 @@ import PIL
 import PIL.Image
 import sys
 import cv2
-
+from test16MorphologicalTriChannel import tresholdBorders
 ##########################################################
 
 assert (int(str('').join(torch.__version__.split('.')[0:3])) >= 41)  # requires at least pytorch version 0.4.1
@@ -150,11 +150,22 @@ def estimate(tensorInput):
 ##########################################################
 
 if __name__ == '__main__':
-    a = cv2.imread('/home/pc/Documents/pytorch-hed/images/12.jpg')
+    inputImagePath = '/home/pc/Documents/pytorch-hed/images/PhoneCamPics2/17Cropped.jpg'
+
+
+    a = cv2.imread(inputImagePath)
     a = cv2.resize(a, (0, 0), fx=0.4, fy=0.4)
 
     tensorInput = torch.FloatTensor(a.transpose(2, 0, 1).astype(numpy.float32) * (1.0 / 255.0))
     tensorOutput = estimate(tensorInput)
-    cv2.imshow("output", (tensorOutput.clamp(0.0, 1.0).numpy().transpose(1, 2, 0)[:, :, 0] * 255.0).astype(numpy.uint8))
+    imgFilteredRaw = (tensorOutput.clamp(0.0, 1.0).numpy().transpose(1, 2, 0)[:, :, 0] * 255.0).astype(numpy.uint8)
+    processedImage =   filteredImage = cv2.bilateralFilter(imgFilteredRaw, 30, 25, 255)
+
+    
+
+    cv2.imshow("output", imgFilteredRaw)
+    cv2.imshow("processed", processedImage)
+
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    cv2.imwrite("out.png", imgFilteredRaw)
