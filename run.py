@@ -10,6 +10,7 @@ import PIL
 import PIL.Image
 import sys
 import cv2
+import test19houghLinesMethods
 from test16MorphologicalTriChannel import tresholdBorders
 ##########################################################
 
@@ -150,7 +151,7 @@ def estimate(tensorInput):
 ##########################################################
 
 if __name__ == '__main__':
-    inputImagePath = '/home/pc/Documents/pytorch-hed/images/CameraRollsBuiten/28.jpg'
+    inputImagePath = '/home/pc/Documents/pytorch-hed/images/NovellisRollsPics/greenStrapsCropped.jpg'
 
 
     a = cv2.imread(inputImagePath)
@@ -161,10 +162,8 @@ if __name__ == '__main__':
     imgFilteredRaw = (tensorOutput.clamp(0.0, 1.0).numpy().transpose(1, 2, 0)[:, :, 0] * 255.0).astype(numpy.uint8)
     processedImage =   filteredImage = cv2.bilateralFilter(imgFilteredRaw, 30, 25, 255)
 
-    
 
-    
-
+    # test19houghLinesMethods.houghDefaults(imgFilteredRaw)
     cv2.imshow("output", imgFilteredRaw)
     cv2.imshow("processed", processedImage)
 
